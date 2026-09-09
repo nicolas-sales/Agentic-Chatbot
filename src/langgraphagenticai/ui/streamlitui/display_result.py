@@ -23,3 +23,20 @@ class DisplayResultStreamlit:
                             st.write(user_message)
                         with st.chat_message("assistant"): # streamlit crée une bulle assistant et affiche le contenu de AIMessage
                             st.write(value["messages"].content)
+
+        elif usecase == "Chatbot with Web":
+             # Prepare state and invoke the graph
+             initial_state = {"messages": [user_message]}
+             res = graph.invoke(initial_state)
+             for message in res["messages"]:
+                  if type(message) == HumanMessage:
+                       with st.chat_message("user"):
+                            st.write(message.content)
+                  elif type(message) == ToolMessage:
+                       with st.chat_message("ai"):
+                            st.write("Tool Call Start")
+                            st.write(message.content)
+                            st.write("Tool Call End")
+                  elif type(message) == AIMessage and message.content: # Afficher AIMessage s'il contient du texte car AIMessage peut parfois servir uniquement à demander l'exécution d'un outil
+                       with st.chat_message("assistant"):
+                            st.write(message.content)                

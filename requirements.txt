@@ -25,3 +25,6 @@ langchain-tavily
 
 # Frontend
 streamlit
+
+# Tool
+tavily-python

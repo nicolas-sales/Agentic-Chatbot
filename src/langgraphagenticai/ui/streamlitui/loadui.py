@@ -31,9 +31,31 @@ class LoadStreamlitUI:
 
                 # Validate API key
                 if not self.user_controls["GROQ_API_KEY"]:
-                    st.warning("Please enter yout Groq API Key to proceed")
+                    st.warning("Please enter your Groq API Key to proceed")
 
             # Usecase selection
             self.user_controls["selected_usecase"] = st.selectbox("Select usecase",usecase_options)
+
+            if self.user_controls["selected_usecase"] == "Chatbot with Web":
+
+                tavily_api_key = st.text_input("Tavily API key", type="password")
+
+                self.user_controls["TAVILY_API_KEY"] = tavily_api_key
+                st.session_state["TAVILY_API_KEY"] = tavily_api_key
+
+                if tavily_api_key:
+                    os.environ["TAVILY_API_KEY"] = tavily_api_key
+                else:
+                    st.warning(
+                        "Please enter your TAVILY API Key to proceed. "
+                        "Don't have one? Refer: https://app.tavily.com"
+                    )
+
+
+                #os.environ["TAVILY_API_KEY"]=self.user_controls["TAVILY_API_KEY"] = st.session_state["TAVILY_API_KEY"]=st.text_input("Tavily API key",type="password")
+
+            # Validate API key
+            #if not self.user_controls["TAVILY_API_KEY"]:
+                #st.warning("Please enter your TAVILY API Key to proceed. Don't have? Refer : https://app.tavily.com")
 
         return self.user_controls
