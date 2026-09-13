@@ -10,10 +10,13 @@ class LoadStreamlitUI:
 
     def load_streamlit_ui(self):
         # Titre onglet navigateur
-        st.set_page_config(page_title = self.config.get_page_title(), layout="wide") # wide : pour que le titre occuope quasiement toute la lageur de l'écran
-
+        st.set_page_config(page_title = self.config.get_page_title(), layout="wide") # wide : pour que le titre occupe quasiement toute la lageur de l'écran
+        
         # Titre haut de page
         st.header(self.config.get_page_title())
+
+        st.session_state.timeframe = ''
+        st.session_state.IsFetchButtonClicked = False
 
         with st.sidebar:
             # Options from config
@@ -36,7 +39,7 @@ class LoadStreamlitUI:
             # Usecase selection
             self.user_controls["selected_usecase"] = st.selectbox("Select usecase",usecase_options)
 
-            if self.user_controls["selected_usecase"] == "Chatbot with Web":
+            if self.user_controls["selected_usecase"] == "Chatbot with Web" or self.user_controls["selected_usecase"] == "AI News":
 
                 tavily_api_key = st.text_input("Tavily API key", type="password")
 
@@ -51,11 +54,18 @@ class LoadStreamlitUI:
                         "Don't have one? Refer: https://app.tavily.com"
                     )
 
+            if self.user_controls["selected_usecase"] == 'AI News':
+                st.subheader("AI News Explorer")
 
-                #os.environ["TAVILY_API_KEY"]=self.user_controls["TAVILY_API_KEY"] = st.session_state["TAVILY_API_KEY"]=st.text_input("Tavily API key",type="password")
+                with st.sidebar:
+                    time_frame = st.selectbox(
+                        "Select Time Frame",
+                        ["Daily", "Weekly", "Monthly"],
+                        index=0 # Commence par Daily qui est à l'index 0
+                    )
 
-            # Validate API key
-            #if not self.user_controls["TAVILY_API_KEY"]:
-                #st.warning("Please enter your TAVILY API Key to proceed. Don't have? Refer : https://app.tavily.com")
+                if st.button("Fetch Lastest AI News", use_container_width=True):
+                    st.session_state.IsFetchButtonClicked = True
+                    st.session_state.timeframe = time_frame # permet de mémoriser la période choisie
 
         return self.user_controls
